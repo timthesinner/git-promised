@@ -1,0 +1,29 @@
+{
+  "name": "git-promised",
+  "version": "1.0.0",
+  "description": "Run any git command as a promise",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/timthesinner/git-promised.git"
+  },
+  "keywords": [
+    "git",
+    "promise",
+    "promised"
+  ],
+  "author": "TimTheSinner",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/timthesinner/git-promised/issues"
+  },
+  "homepage": "https://github.com/timthesinner/git-promised#readme",
+  "dependencies": {
+    "exec-promised": "^1.4.0",
+    "q": "^1.4.1",
+    "underscore": "^1.8.3"
+  }
+}

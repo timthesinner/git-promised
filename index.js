@@ -146,7 +146,7 @@ git.prototype.push = function() {
   return exec(['git', 'push'], this.repo).then(output);
 }
 
-git.prototype.maintanance = function(clean) {
+git.prototype.maintenance = function(clean) {
   if (clean) {
     return this.reset({hard:true, head:true})
              .then(this.clean.bind(this, {force:true, dir:true}))

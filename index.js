@@ -43,37 +43,39 @@ git.prototype.run = function() {
   return exec(args, this.repo).then(output);
 }
 
-git.prototype.log = function(count, file) {
-  return exec(['git', 'log', '-n', count], file || this.repo).then(function(res) {
-    var commits = [],
-        commit = null;
-        
-    if (res.out) {
-      _.each(res.out, function(line) {
-        var match = null;
-        if ((match = COMMIT.exec(line))) {
-          if (commit) {
-            commits.push(commit);
-            commit = null;
-          }
-          commit = {hash:match[1],text:line}
-        } else {
-          commit.text += '\n' + line;
-          if ((match = AUTHOR.exec(line))) {
-            commit.author = match[1];
-          } else if ((match = DATE.exec(line))) {
-            commit.date = match[1];
-          }
-        }
-      });
+git.prototype.toCommits = function(lines) {
+  var commits = [],
+      commit = null;
       
-      if (commit) {
-        commits.push(commit);
+  if (lines) {
+    _.each(lines, function(line) {
+      var match = null;
+      if ((match = COMMIT.exec(line))) {
+        if (commit) {
+          commits.push(commit);
+          commit = null;
+        }
+        commit = {hash:match[1],text:line}
+      } else {
+        commit.text += '\n' + line;
+        if ((match = AUTHOR.exec(line))) {
+          commit.author = match[1];
+        } else if ((match = DATE.exec(line))) {
+          commit.date = match[1];
+        }
       }
-    }
+    });
     
-    return commits;
-  });
+    if (commit) {
+      commits.push(commit);
+    }
+  }
+  
+  return commits;
+}
+
+git.prototype.log = function(count, file) {
+  return exec(['git', 'log', '-n', count], file || this.repo).then(output).then(this.toCommits);
 }
 
 git.prototype.list = function(commit) {

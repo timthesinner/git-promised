@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/timthesinner/git-promised#readme",
   "dependencies": {
-    "exec-promised": "^1.4.0",
+    "exec-promised": "^2.2.0",
     "q": "^1.4.1",
     "underscore": "^1.8.3"
   }

@@ -20,7 +20,7 @@
  */
 var Q = require('q'),
     _ = require('underscore'),
-    exec = require('exec-promised');
+    spawn = require('exec-promised').spawn;
     
 var COMMIT = /^commit\s+(.*)$/i,
     AUTHOR = /^Author:\s+(.*)$/i,
@@ -40,7 +40,7 @@ module.exports = function(repo) {
 git.prototype.run = function() {
   var args = Array.prototype.slice.apply(arguments);
   args.unshift('git');
-  return exec(args, this.repo).then(output);
+  return spawn(args, this.repo).then(output);
 }
 
 git.prototype.toCommits = function(lines) {
@@ -75,11 +75,11 @@ git.prototype.toCommits = function(lines) {
 }
 
 git.prototype.log = function(count, file) {
-  return exec(['git', 'log', '-n', count], file || this.repo).then(output).then(this.toCommits);
+  return spawn(['git', 'log', '-n', count], file || this.repo).then(output).then(this.toCommits);
 }
 
 git.prototype.list = function(commit) {
-  return exec(['git', 'diff-tree', '--no-commit-id', '--name-only', '-r', commit.hash || commit], this.repo).then(function(res) {
+  return spawn(['git', 'diff-tree', '--no-commit-id', '--name-only', '-r', commit.hash || commit], this.repo).then(function(res) {
     return _.compact(res.out);
   });
 }
@@ -89,15 +89,15 @@ git.prototype.ls = function(options) {
   var options = _.extend({}, options);
   if (options.others) { args.push('--others'); }
   if (options.excludeStandard) { args.push('--exclude-standard'); }
-  return exec(args, this.repo).then(output);
+  return spawn(args, this.repo).then(output);
 }
 
 git.prototype.add = function(file) {
-  return exec(['git', 'add', file], this.repo).then(output);
+  return spawn(['git', 'add', file], this.repo).then(output);
 }
 
 git.prototype.commit = function(message) {
-  return exec(['git', 'commit', '-a', '-m', message], this.repo).then(output);
+  return spawn(['git', 'commit', '-a', '-m', message], this.repo).then(output);
 }
 
 git.prototype.fetch = function(options) {
@@ -105,7 +105,7 @@ git.prototype.fetch = function(options) {
   var options = _.extend({}, options);
   if (options.prune) { args.push('-p'); }
   if (options.all) { args.push('--all'); }
-  return exec(args, this.repo).then(output);
+  return spawn(args, this.repo).then(output);
 }
 
 git.prototype.reset = function(options) {
@@ -113,7 +113,7 @@ git.prototype.reset = function(options) {
   var options = _.extend({}, options);
   if (options.hard) { args.push('--hard'); }
   if (options.head) { args.push('HEAD'); }
-  return exec(args, this.repo).then(output);
+  return spawn(args, this.repo).then(output);
 }
 
 git.prototype.clean = function(options) {
@@ -121,7 +121,7 @@ git.prototype.clean = function(options) {
   var options = _.extend({}, options);
   if (options.force) { args.push('--force'); }
   if (options.dir) { args.push('-d'); }
-  return exec(args, this.repo).then(output);
+  return spawn(args, this.repo).then(output);
 }
 
 git.prototype.gc = function() {
@@ -129,23 +129,23 @@ git.prototype.gc = function() {
   var options = _.extend({}, options);
   if (options.aggressive) { args.push('--aggressive'); }
   if (options.prune) { args.push('--prune'); }
-  return exec(args, this.repo).then(output);
+  return spawn(args, this.repo).then(output);
 }
 
 git.prototype.prune = function() {
-  return exec(['git', 'prune'], this.repo).then(output);
+  return spawn(['git', 'prune'], this.repo).then(output);
 }
 
 git.prototype.fsck = function() {
-  return exec(['git', 'fsck'], this.repo).then(output);
+  return spawn(['git', 'fsck'], this.repo).then(output);
 }
 
 git.prototype.pull = function() {
-  return exec(['git', 'pull', '--rebase'], this.repo).then(output);
+  return spawn(['git', 'pull', '--rebase'], this.repo).then(output);
 }
 
 git.prototype.push = function() {
-  return exec(['git', 'push'], this.repo).then(output);
+  return spawn(['git', 'push'], this.repo).then(output);
 }
 
 git.prototype.maintenance = function(clean) {
